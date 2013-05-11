@@ -12,19 +12,21 @@ Example courtesy of
 [Pascal Bourguignon](http://informatimago.free.fr/i/index.html), see
 [https://groups.google.com/forum/?fromgroups=#!topic/comp.lang.lisp/JJxTBqf7scU]
 
-    ;; This is symbolic computation:
-    
-    (defparameter *additive-color-graph*
-        '((red   (red white)   (green yellow) (blue magenta))
-          (green (red yellow)  (green white)  (blue cyan))
-          (blue  (red magenta) (green cyan)   (blue white))))
-    
-    
-    (defun symbolic-color-add (a b)
-      (cadr (assoc a (cdr (assoc b *additive-color-graph*)))))
-    
-    (symbolic-color-add 'red 'green)
-    ;; --> yellow
+~~~lisp
+;; This is symbolic computation:
+
+(defparameter *additive-color-graph*
+    '((red   (red white)   (green yellow) (blue magenta))
+      (green (red yellow)  (green white)  (blue cyan))
+      (blue  (red magenta) (green cyan)   (blue white))))
+
+
+(defun symbolic-color-add (a b)
+  (cadr (assoc a (cdr (assoc b *additive-color-graph*)))))
+
+(symbolic-color-add 'red 'green)
+;; --> yellow
+~~~
 
 ## Language to parse
 
@@ -68,8 +70,19 @@ And of course it should give the following answer when run:
     TOY-PARSER> (mix-colors)
     YELLOW
 
-Now, let's do some basic measurement, keeping in mind that we're actually
-parsing then compiling and only then running the program at each iteration:
+## Is it a parser or a compiler
+
+One hour later, now that the program actually runs, the main entry point
+looks like this:
+
+~~~lisp
+(defun mix-colors (&optional (program *colors-program*))
+  "Parse, compile then run given color mixing program."
+  (funcall (compile nil (parse 'mix program))))  
+~~~
+
+Let's do some basic measurement, keeping in mind that we're actually parsing
+then compiling and only then running the program at each iteration:
 
     TOY-PARSER> (time (loop repeat 1000 do (mix-colors)))
     (LOOP REPEAT 1000 DO (MIX-COLORS))
