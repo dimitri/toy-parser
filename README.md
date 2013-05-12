@@ -98,7 +98,38 @@ That result is to be read as an average of `754 microseconds` to parse then
 compile then run the proposed code. My *ahah* moment comes from the fact
 that we are actually compiling down to machine code, here.
 
-We can even *disassemble* the output easily:
+Note that we could also pre-compile the code, then run it as much as we
+want, of course.
+
+    TOY-PARSER> (let ((f (compile nil (parse-program)))) (funcall f))
+    YELLOW
+
+Let's measure how much faster that runs when just executing the `funcall` in
+a loop:
+
+    TOY-PARSER> (time (loop with f = (compile nil (parse-program))
+		                  repeat 1000 do (funcall f)))
+    (LOOP WITH F = (COMPILE NIL (PARSE-PROGRAM)) REPEAT 1000 DO (FUNCALL F))
+    took 989 microseconds (0.000989 seconds) to run.
+    During that period, and with 4 available CPU cores,
+         972 microseconds (0.000972 seconds) were spent in user mode
+          22 microseconds (0.000022 seconds) were spent in system mode
+     74,768 bytes of memory allocated.
+    NIL
+
+Oh. Let's then even factor out the *compilation* in the *timing*:
+
+    TOY-PARSER> (let ((f (compile nil (parse-program))))
+	              (time (loop repeat 1000 do (funcall f))))
+    (LOOP REPEAT 1000 DO (FUNCALL F))
+    took 62 microseconds (0.000062 seconds) to run.
+    During that period, and with 4 available CPU cores,
+         63 microseconds (0.000063 seconds) were spent in user mode
+          9 microseconds (0.000009 seconds) were spent in system mode
+    NIL
+
+That tends to confirm that we're actually running *compiled* code here. And
+we can even *disassemble* that *compiled* code and have a look at it:
 
     TOY-PARSER> (disassemble (compile nil (parse-program)))
     L0
