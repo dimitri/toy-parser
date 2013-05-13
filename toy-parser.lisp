@@ -58,7 +58,7 @@ mix red and green"
 ;;; mix red and green
 (defrule mix-two-colors (and kw-mix color-name kw-and color-name)
   (:destructure (mix c1 and c2)
-    (declare (ignore mix and))		;ignore keywords
+    (declare (ignore mix and))		; ignore keywords
     (list c1 c2)))
 
 (defrule program (and colors mix-two-colors)
