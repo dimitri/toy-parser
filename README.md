@@ -1,5 +1,8 @@
 # Toy Parser
 
+This code is meant as a companion to the article
+[from Parsing to Compiling](http://tapoueh.org/blog/2013/05/13-from-parser-to-compiler.html).
+
 Toy parser to show up how writing a parser easily gives a compiler in common
 lisp. The following took about an hour to write, from getting the idea to
 running the code and writing down that documentation file.
